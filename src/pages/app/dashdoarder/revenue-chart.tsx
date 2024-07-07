@@ -1,10 +1,9 @@
-import { Value } from '@radix-ui/react-select'
 import {
   CartesianGrid,
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip,
+  // Tooltip,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -53,13 +52,13 @@ export function RevenueChartCard() {
               }
             />
             <XAxis dataKey="date" axisLine={false} tickLine={false} dy={16} />
+            <CartesianGrid vertical={false} className="stroke-muted" />
             <Line
               type="linear"
               strokeWidth={2}
               dataKey="revenue"
               stroke={colors.violet[500]}
             />
-            <CartesianGrid vertical={false} className="stroke-muted" />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
