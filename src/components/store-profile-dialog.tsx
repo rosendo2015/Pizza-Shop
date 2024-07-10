@@ -32,7 +32,7 @@ export function StoreProfileDialog() {
 
   const { register, handleSubmit } = useForm<StoreProfileSchema>({
     resolver: zodResolver(storeProfileSchema),
-    defaultValues: {
+    values: {
       name: managedRestaurant?.name ?? '',
       description: managedRestaurant?.description ?? '',
     },
