@@ -23,10 +23,15 @@ export function Orders() {
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
   const { data: result } = useQuery({
-    queryKey: ['orders'],
+    queryKey: ['orders', pageIndex],
     queryFn: () => getOrders({ pageIndex }),
   })
-  function handlePaginate
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set('page', (pageIndex + 1).toString())
+      return state
+    })
+  }
   return (
     <>
       <Helmet title="Pedidos" />
@@ -60,6 +65,7 @@ export function Orders() {
           </div>
           {result && (
             <Pagination
+              onPageChange={handlePaginate}
               pageIndex={result.meta.pageIndex}
               totalCount={result.meta.totalCount}
               perPage={result.meta.perPage}
