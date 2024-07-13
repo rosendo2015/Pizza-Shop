@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Search, X } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -40,7 +40,7 @@ export function OrderTableFilters() {
     },
   })
 
-  function handleFilter({ orderId, name, status }: OrderFiltersSchema) {
+  function handleFilter({ orderId, customerName, status }: OrderFiltersSchema) {
     setSearchParams((state) => {
       if (orderId) {
         state.set('orderId', orderId)
