@@ -1,3 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
+
+import { getOrderDetails } from '@/api/get-order-details'
 import {
   DialogContent,
   DialogDescription,
@@ -13,11 +16,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-export function OrderDetail() {
+
+export interface OrderDetailsProps {
+  orderId: string
+  open: boolean
+}
+
+export function OrderDetails({ orderId, open }: OrderDetailsProps) {
+  const { data: order } = useQuery({
+    queryKey: ['order', orderId],
+    queryFn: () => getOrderDetails({ orderId }),
+    enabled: open,
+  })
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Pedido: f321re65gfr313g165tr</DialogTitle>
+        <DialogTitle>Pedido: {order?.id}</DialogTitle>
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
       <div className="space-y-6">
@@ -36,9 +50,7 @@ export function OrderDetail() {
             </TableRow>
             <TableRow>
               <TableCell className="text-muted-foreground">Cliente</TableCell>
-              <TableCell className="flex justify-end">
-                Francisco Rosendo Coelho
-              </TableCell>
+              <TableCell className="flex justify-end">rosendo</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="text-muted-foreground">Telefone</TableCell>
