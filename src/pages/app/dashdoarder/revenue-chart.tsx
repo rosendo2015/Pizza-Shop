@@ -1,4 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { subDays } from 'date-fns'
+import { useMemo, useState } from 'react'
+import { DateRange } from 'react-day-picker'
 import {
   CartesianGrid,
   Line,
@@ -22,10 +25,26 @@ import { DatePickerWithRange } from '@/components/ui/date-range-picker'
 import { Label } from '@/components/ui/label'
 
 export function RevenueChartCard() {
-  const { data: dailyRevenueInPeriod } = useQuery({
-    queryKey: ['metrics', 'daily-revenue-in-period'],
-    queryFn: getDailyRevenueInPeriod,
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 7),
+    to: new Date(),
   })
+  const { data: dailyRevenueInPeriod } = useQuery({
+    queryKey: ['metrics', 'daily-revenue-in-period', dateRange],
+    queryFn: () =>
+      getDailyRevenueInPeriod({
+        from: dateRange?.from,
+        to: dateRange?.to,
+      }),
+  })
+  const chartData = useMemo(() => {
+    return dailyRevenueInPeriod?.map((chartItem) => {
+      return {
+        date: chartItem.date,
+        receipt: chartItem.receipt / 100,
+      }
+    })
+  }, [dailyRevenueInPeriod])
   return (
     <Card className="col-span-6">
       <CardHeader className="flex-row items-center justify-between pb-8">
@@ -37,21 +56,21 @@ export function RevenueChartCard() {
         </div>
         <div className="flex items-center gap-3">
           <Label>Período</Label>
-          <DatePickerWithRange />
+          <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
         </div>
       </CardHeader>
       <CardContent>
-        {dailyRevenueInPeriod && (
+        {chartData && (
           <ResponsiveContainer className="w-100%" height={240}>
-            <LineChart data={dailyRevenueInPeriod} style={{ fontSize: 12 }}>
+            <LineChart data={chartData} style={{ fontSize: 12 }}>
               <XAxis dataKey="date" axisLine={false} tickLine={false} dy={16} />
               <YAxis
                 stroke="#888"
                 axisLine={false}
                 tickLine={false}
                 width={80}
-                tickFormatter={(Value: number) =>
-                  Value.toLocaleString('pt-BR', {
+                tickFormatter={(value: number) =>
+                  value.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                   })
