@@ -32,7 +32,7 @@ export function OrderStatus({ status }: OrderStatusProps) {
       {status === 'delivered' && (
         <span
           data-testid="badge"
-          className="h-2 w-2 rounded-full bg-amber-500"
+          className="h-2 w-2 rounded-full bg-emerald-500"
         ></span>
       )}
       {status === 'processing' && (
